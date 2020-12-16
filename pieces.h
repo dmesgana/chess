@@ -1,7 +1,6 @@
 #ifndef PIECES_H
 #define PIECES_H
 
-#include <stdio.h>
 #include <string>
 
 piece* layout[8][8];
@@ -15,22 +14,16 @@ public:
     int coord[2]; //current location
     int dead = 0; //0 is alive, 1 is dead
 
-    void kill(piece to_eat) //eat a piece
-    {
-        to_eat.dead = 1;
-        this->kill_count++;
-    }
-    bool can_kill(int location[2]){
+    bool kill(int location[2]){
         piece* who = layout[location[0]][location[1]];
-        if(who != NULL){
-            if(who->color != this->color){
-                this->kill(*who);
-                return false;
-            }
+        if(who->color != this->color){ //makes sure its not an ally
+            who->dead = 1;
+            this->kill_count++;
             return true;
         }
         return false;
     }
+
     void move(int location[2]); //move current piece (depends on piece) lefal move also
 
     bool illegal(int location[2]); //make sure no pieces are on the path (depends on piece)
