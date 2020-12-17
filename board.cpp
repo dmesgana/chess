@@ -4,6 +4,8 @@
 #include "pieces.h"
 
 extern piece* layout[8][8];
+extern int bk_pos[2];
+extern int wk_pos[2];
 
 void board_setup(){
     king* bk, wk;

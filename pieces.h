@@ -4,6 +4,8 @@
 #include <string>
 
 piece* layout[8][8];
+int bk_pos[2] = {5, 0};
+int wk_pos[2] = {5, 8};
 
 //basic piece class that has methods all pieces will need
 class piece{
@@ -13,12 +15,14 @@ public:
     int kill_count = 0; //to see which piece was used the most
     int coord[2]; //current location
     int dead = 0; //0 is alive, 1 is dead
+    int kings_pos[2]; //position of the king
 
     bool kill(int location[2]){
         piece* who = layout[location[0]][location[1]];
         if(who->color != this->color){ //makes sure its not an ally
             who->dead = 1;
             this->kill_count++;
+            this->update_coord(location[0], location[1]);
             return true;
         }
         return false;
