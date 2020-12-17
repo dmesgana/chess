@@ -48,7 +48,16 @@ void queen::move(int location[2]){
     }
 
     int diff[2] = {this->coord[0] - location[0], this->coord[1] - location[1]};
+    if(((diff[0] != 0) != (diff[1] != 0)) || (location[0] != location[1])){
+        printf("illegal queen move");
+        return;
+    }
 
+    //exposed king **implement**
+
+    //kill
+
+    this->update_coord(location[0], location[1]);
 }
 
          /******************* ROOK **************************/
@@ -127,9 +136,9 @@ void bishop::move(int location[2]){
 
     //no jumping over pieces
 
-    //kill
-
     //exposed king **implement**
+
+    //kill
 
     this->update_coord(location[0], location[1]);
 }
@@ -151,6 +160,8 @@ void knight::move(int location[2]){
         }
     
     //exposed king  **implement**
+
+    //kill
 
     this->update_coord(location[0], location[1]);
 }
