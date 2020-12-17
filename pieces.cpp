@@ -41,6 +41,13 @@ void king::move(int location[2]){
 
          /******************* QUEEN **************************/
 void queen::move(int location[2]){
+    //makes sure no OOB errors
+    if(location[0] > 8 || location[0] < 0 || location[1] > 8 || location[1] < 0){
+        printf("out of bounds");
+        return;
+    }
+
+    int diff[2] = {this->coord[0] - location[0], this->coord[1] - location[1]};
 
 }
 
@@ -63,18 +70,18 @@ void rook::move(int location[2]){
     int dir = 0;
     bool up = false;
     piece* temp;
-    if(i == diff[0]){dir = diff[1]; up = true;}
-    else dir = diff[0];
+    if(i == diff[1]){dir = diff[0]; up = true;}
+    else dir = diff[1];
     while(i != dir){
         if(up){
             //down
             if(dir < 0){
-                temp = layout[location[0]][location[1]+i+1];
+                temp = layout[location[0]+i+1][location[1]];
                 i++;
             }
             //up
             else{
-                temp = layout[location[0]][location[1]+i-1];
+                temp = layout[location[0]+i-1][location[1]];
                 i--;
             }
         }
@@ -82,14 +89,14 @@ void rook::move(int location[2]){
         else{
             //right
             if(dir > 0){
-                temp = layout[location[0]+i+1][location[1]];
+                temp = layout[location[0]][location[1]+i+1];
                 i++;
             }
+            //left
             else{
-               temp = layout[location[0]+i-1][location[1]];
+               temp = layout[location[0]][location[1]+i-1];
                 i--; 
             }
-            //left
         }
 
         if(temp != NULL){
@@ -98,6 +105,8 @@ void rook::move(int location[2]){
         }
     }
     //exposed king **implement**
+
+    //kill
 
     this->update_coord(location[0], location[1]);
 }
@@ -111,10 +120,18 @@ void bishop::move(int location[2]){
     }
 
     int diff[2] = {this->coord[0] - location[0], this->coord[1] - location[1]};
-    if((diff[0] == 0) || (diff[1] == 0)){
+    if(location[0] != location[1]){
         printf("illegal bishop move");
         return;
     }
+
+    //no jumping over pieces
+
+    //kill
+
+    //exposed king **implement**
+
+    this->update_coord(location[0], location[1]);
 }
 
          /******************* KNIGHT **************************/
@@ -126,8 +143,9 @@ void knight::move(int location[2]){
     }
 
     int diff[2] = {this->coord[0] - location[0], this->coord[1] - location[1]};
-    if((diff[0] != 1 || diff[0] != -1 || diff[0] != 2 || diff[0] != -2) &&
-        diff[1] != 1 || diff[1] != -1 || diff[1] != 2 || diff[1] != -2){
+    if((diff[0] != 1 || diff[0] != -1 &&  diff[1] != 2 || diff[1] != -2) ||
+        (diff[0] != 2 || diff[0] != -2 && diff[1] != 1 || diff[1] != -1))
+        {
             printf("not a legal knight move");
             return;
         }
@@ -148,14 +166,14 @@ void pawn::move(int location[2]){
     int diff[2] = {this->coord[0] - location[0], this->coord[1] - location[1]};
 
 
-    if(diff[0] > 1 || diff[0] < -1 || diff[1] > 1 || diff[1] == 0 || diff[1] < -1){return;} //makes sure the pawn cannot transport
+    if(diff[1] > 1 || diff[1] < -1 || diff[0] > 1 || diff[0] == 0 || diff[0] < -1){return;} //makes sure the pawn cannot transport
 
     //exposed king **implement**
 
     //different colored pawns go in different directions (kinda racist tbh)
     if(this->color == "white"){
         //one move up
-        if(diff[0] == 0 && diff[1] == 1){
+        if(diff[0] == 1 && diff[1] == 0){
             if(layout[location[0]][location[1]] != NULL){
                 this->update_coord(location[0], location[1]);
             }
@@ -173,7 +191,7 @@ void pawn::move(int location[2]){
 
     else if(this->color == "black"){
         //one move up
-        if(diff[0] == 0 && diff[1] == -1){
+        if(diff[0] == -1 && diff[1] == 0){
             if(layout[location[0]][location[1]] != NULL){
                 this->update_coord(location[0], location[1]);
             }
