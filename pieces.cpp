@@ -26,7 +26,9 @@ void king::move(int location[2]){
     {
     //tries to take a piece
         if(layout[location[0]][location[1]] != NULL){
-            bool killed = kill(location);
+            bool killed = this->kill(location);
+            if(!killed) printf("can kill an ally");
+            return;
         }
         
     //not move in danger (not done rn cuz idk) **implement**
@@ -53,11 +55,20 @@ void queen::move(int location[2]){
         return;
     }
 
+    //not jump over pieces
+
     //exposed king **implement**
 
-    //kill
+    piece* temp;
+    temp = layout[location[0]][location[1]];
+    if(temp != NULL){
+        bool killed = this->kill(location);
+        if(!killed) printf("can kill an ally");
+        return;
+    }
 
     this->update_coord(location[0], location[1]);
+    return;
 }
 
          /******************* ROOK **************************/
@@ -75,22 +86,22 @@ void rook::move(int location[2]){
     }
 
     //makes sure rooks don't jump over pieces
-    int i = 0;
+    int i = 1;
     int dir = 0;
     bool up = false;
     piece* temp;
-    if(i == diff[1]){dir = diff[0]; up = true;}
+    if(diff[1] == 0){dir = diff[0]; up = true;}
     else dir = diff[1];
     while(i != dir){
         if(up){
             //down
             if(dir < 0){
-                temp = layout[location[0]+i+1][location[1]];
+                temp = layout[location[0]+i][location[1]];
                 i++;
             }
             //up
             else{
-                temp = layout[location[0]+i-1][location[1]];
+                temp = layout[location[0]+i][location[1]];
                 i--;
             }
         }
@@ -98,12 +109,12 @@ void rook::move(int location[2]){
         else{
             //right
             if(dir > 0){
-                temp = layout[location[0]][location[1]+i+1];
+                temp = layout[location[0]][location[1]+i];
                 i++;
             }
             //left
             else{
-               temp = layout[location[0]][location[1]+i-1];
+               temp = layout[location[0]][location[1]+i];
                 i--; 
             }
         }
@@ -115,9 +126,15 @@ void rook::move(int location[2]){
     }
     //exposed king **implement**
 
-    //kill
+    temp = layout[location[0]][location[1]];
+    if(temp != NULL){
+        bool killed = this->kill(location);
+        if(!killed) printf("can kill an ally");
+        return;
+    }
 
     this->update_coord(location[0], location[1]);
+    return;
 }
 
          /******************* BISHOP **************************/
@@ -138,7 +155,13 @@ void bishop::move(int location[2]){
 
     //exposed king **implement**
 
-    //kill
+    piece* temp;
+    temp = layout[location[0]][location[1]];
+    if(temp != NULL){
+        bool killed = this->kill(location);
+        if(!killed) printf("can kill an ally");
+        return;
+    }
 
     this->update_coord(location[0], location[1]);
 }
@@ -161,7 +184,13 @@ void knight::move(int location[2]){
     
     //exposed king  **implement**
 
-    //kill
+    piece* temp;
+    temp = layout[location[0]][location[1]];
+    if(temp != NULL){
+        bool killed = this->kill(location);
+        if(!killed) printf("can kill an ally");
+        return;
+    }
 
     this->update_coord(location[0], location[1]);
 }
@@ -194,6 +223,7 @@ void pawn::move(int location[2]){
         //kill
         if(layout[location[0]][location[1]] != NULL){
             bool killed = this->kill(location);
+            if(!killed) printf("can kill an ally");
             return;
         }
 
@@ -211,7 +241,8 @@ void pawn::move(int location[2]){
 
         //kill
         if(layout[location[0]][location[1]] != NULL){
-            bool killed = this->kill(location); 
+            bool killed = this->kill(location);
+            if(!killed) printf("can kill an ally");
             return;
         }
 
