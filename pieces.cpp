@@ -7,10 +7,19 @@
 #include "pieces.h"
 
          /******************* KING **************************/
-bool king::illegal(int location[2]){
-    //king moves into danger
+void king::update_coord(int y, int x){  //make sure current location is updated
+    piece* temp = layout[coord[0]][coord[1]];
+    delete layout[coord[0]][coord[1]];
+    coord[0] = y; coord[1] = x;
+    layout[y][x] = temp;
+    if(this->color == "white"){
+        wk_pos[0] = y; wk_pos[1] = x;
+    } 
+    else{
+        bk_pos[0] = y; bk_pos[1] = x;
+    }
 }
-
+         
 void king::move(int location[2]){
     //makes sure no OOB errors
     if(location[0] > 8 || location[0] < 0 || location[1] > 8 || location[1] < 0){
@@ -57,7 +66,13 @@ void queen::move(int location[2]){
 
     //not jump over pieces
 
-    //exposed king **implement**
+    //exposed king
+    if(this->color == "black"){
+        this->exposed_king(location, bk_pos, "black");
+    }
+    else{
+        this->exposed_king(location, wk_pos, "white");
+    }
 
     piece* temp;
     temp = layout[location[0]][location[1]];
@@ -124,7 +139,13 @@ void rook::move(int location[2]){
             return;
         }
     }
-    //exposed king **implement**
+    //exposed king
+    if(this->color == "black"){
+        this->exposed_king(location, bk_pos, "black");
+    }
+    else{
+        this->exposed_king(location, wk_pos, "white");
+    }
 
     temp = layout[location[0]][location[1]];
     if(temp != NULL){
@@ -153,7 +174,13 @@ void bishop::move(int location[2]){
 
     //no jumping over pieces
 
-    //exposed king **implement**
+    //exposed king
+    if(this->color == "black"){
+        this->exposed_king(location, bk_pos, "black");
+    }
+    else{
+        this->exposed_king(location, wk_pos, "white");
+    }
 
     piece* temp;
     temp = layout[location[0]][location[1]];
@@ -182,7 +209,13 @@ void knight::move(int location[2]){
             return;
         }
     
-    //exposed king  **implement**
+    //exposed king
+    if(this->color == "black"){
+        this->exposed_king(location, bk_pos, "black");
+    }
+    else{
+        this->exposed_king(location, wk_pos, "white");
+    }
 
     piece* temp;
     temp = layout[location[0]][location[1]];
@@ -208,7 +241,13 @@ void pawn::move(int location[2]){
 
     if(diff[1] > 1 || diff[1] < -1 || diff[0] > 1 || diff[0] == 0 || diff[0] < -1){return;} //makes sure the pawn cannot transport
 
-    //exposed king **implement**
+    //exposed king
+    if(this->color == "black"){
+        this->exposed_king(location, bk_pos, "black");
+    }
+    else{
+        this->exposed_king(location, wk_pos, "white");
+    }
 
     //different colored pawns go in different directions (kinda racist tbh)
     if(this->color == "white"){

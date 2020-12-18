@@ -2,6 +2,7 @@
 #define PIECES_H
 
 #include <string>
+#include <cstdlib>
 
 piece* layout[8][8];
 int bk_pos[2] = {5, 0};
@@ -30,13 +31,35 @@ public:
 
     void move(int location[2]); //move current piece (depends on piece) lefal move also
 
-    bool illegal(int location[2]); //make sure no pieces are on the path (depends on piece)
+    bool exposed_king(int location[2], int king[2], std::string bw){ //make sure no pieces are on the path (depends on piece)
+        int y = location[0] - king[0]; int x = location[1] - king[1];
+        std::string type = "";
+        y /= abs(y); x /= abs(x);
 
-    void update_coord(int x, int y){ //make sure current location is updated
+        if((y==1||y==-1) && (x==-1||x==1)){
+            type = "bishop";
+        }
+        else{
+            type = "rook";
+        }
+
+        piece* find_piece = layout[y][x];
+        while(y < 8 && x < 8){
+            if(find_piece != NULL && find_piece->color != bw){
+                if(find_piece->myName == type || find_piece->myName == "queen"){
+                    return true;
+                }
+            }
+            y += y; x += x;
+        }
+        return false;
+    }
+
+    void update_coord(int y, int x){ //make sure current location is updated
         piece* temp = layout[coord[0]][coord[1]];
         delete layout[coord[0]][coord[1]];
-        coord[0] = x; coord[1] = y;
-        layout[x][y] = temp; 
+        coord[0] = y; coord[1] = x;
+        layout[y][x] = temp; 
     } 
 };
 
@@ -46,7 +69,7 @@ public:
         myName = "king";
     }
     void move(int location[2]);
-    bool illegal(int location[2]);
+    void update_coord(int x, int y);
 };
 
 class queen: public piece{
